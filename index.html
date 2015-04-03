@@ -1,0 +1,225 @@
+
+<!doctype html>
+<html>
+<head>
+<meta charset="gbk"/>
+<title>layPage官网 - 多场景JavaScript分页组件</title>
+<meta name="keywords" content="分页插件,ajax分页,异步分页">
+<meta name="description" content="laypage是一款多功能的js分页组件，主要应用于前端页面Ajax普通分页以及信息流加载，并且可无缝迁移至Node.js平台。laypage不依赖于任何第三方库，直接拿来用即可，它的接口继承了layui系列组件的一贯简洁，极易上手。那么，从现在开始，将分页的任务交给laypage吧！">
+<link href="http://res.sentsin.com/css/xu.css" type="text/css" rel="stylesheet">
+<link href="demo.css" type="text/css" rel="stylesheet">
+
+<script src="http://res.sentsin.com/lay/lib/laypage/laypage.js?v=1.2" tips="使用时，只要这一个js即可"></script>
+</head>
+<body>
+<div class="laybanner">
+    <div class="box">
+        <h1 title="layPage - 多场景JavaScript分页组件">layPage - 多场景JavaScript分页组件</h1>
+    </div>
+</div>
+<div class="laynav">
+    <div class="box">
+        <a href="http://sentsin.com/layui/laypage/" class="thianav">首页</a>
+        <a href="doc.html" id="demoss">基础文档</a>
+        <a href="http://say.sentsin.com/home-45.html" target="_blank">有问必答</a>
+        <a href="http://sentsin.com/" target="_blank">贤心博客</a>
+        <div class="git"><img src="http://git.oschina.net/logo.gif" style="position:absolute; top:3px; left:0;  height:20px; padding-left: 1rem">：<a href="//git.oschina.net/sentsin/layPage" target="_blank">://git.oschina.net/sentsin/layPage</a></div>
+    </div>
+</div>
+
+<div class="laymain">
+    <div class="box">
+        <p class="laytext" style="padding-right:210px;">         layPage是一款多功能的js分页组件，即适用于异步分页，又可用于传统的整页刷新跳页，还支持信息流加载，并且可无缝迁移至Node.js平台。layPage不依赖于任何第三方库，直接拿来用即可，它的接口继承了layui系列组件的一贯简洁，极易上手。那么，从现在开始，将一切分页的任务交给layPage吧！关注人次：<em id="sees">loading…</em>
+            <a href="http://res.sentsin.com/download/laypage-v1.2.zip"  class="layicon laydown" target="_blank" id="layDowns">
+                <img src="http://res.sentsin.com/images/laydown.png" alt="绿色下载组件">
+                <cite class="downintro">
+                    版本：<script>document.write(laypage.v)</script>，下载数：<em class="ver" id="downs">…</em>
+                </cite>
+            </a>
+        </p>
+        <h2 style="margin:10px 0;">先看个实例</h2>
+        
+        <!-- 970*90 -->
+        <div style="text-align:center" id="ad728">
+            <ins class="adsbygoogle" style="display:inline-block;width:970px;height:90px;" data-ad-client="ca-pub-6111334333458862"  data-ad-slot="5254867833"></ins>
+        </div>
+
+        <div id="page1" style="margin-top:5px; text-align:center;"></div>
+        <div id="view1" style="padding-top:10px; text-align:center;"></div>
+        <pre title="默认版对应代码"><span>//以下将以jquery.ajax为例，演示一个异步分页
+$.getJSON('test/demo1.json', {curr: 6}, function(res){ //从第6页开始请求。返回的json格式可以任意定义
+    laypage({
+        cont: 'page1', //容器。值支持id名、原生dom对象，jquery对象。【如该容器为】：&lt;div id="page1">&lt;/div>
+        pages: res.pages, //通过后台拿到的总页数
+        curr: 6, //初始化当前页
+        jump: function(e){ //触发分页后的回调
+            $.getJSON('test/demo1.json', {curr: e.curr}, function(res){
+                e.pages = e.last = res.pages; //重新获取总页数，一般不用写
+                //渲染
+                var view = document.getElementById('view1'); //你也可以直接使用jquery
+                var demoContent = (new Date().getTime()/Math.random()/1000)|0; //此处仅仅是为了演示
+                view.innerHTML = res.content + demoContent; 
+            });
+        }
+    });
+});
+</span></pre>
+
+        
+        <h2 style="margin:10px 0;">整页刷新式跳转</h2>
+        <div id="page11" style="margin-top:5px; text-align:center;"></div>
+        <pre title="默认版对应代码"><span>//好像很实用的样子，后端的同学再也不用写分页逻辑了。
+laypage({
+    cont: 'page11',
+    pages: 18, //可以叫服务端把总页数放在某一个隐藏域，再获取。假设我们获取到的是18
+    curr: function(){ //通过url获取当前页，也可以同上（pages）方式获取
+        var page = location.search.match(/page=(\d+)/);
+        return page ? page[1] : 1;
+    }(), 
+    jump: function(e, first){ //触发分页后的回调
+        if(!first){ //一定要加此判断，否则初始时会无限刷新
+            location.href = '?page='+e.curr;
+        }
+    }
+});
+</span></pre>
+        
+
+        <h2 style="margin:10px 0;">自定义皮肤</h2>
+        <div id="page2" style="text-align:center;"></div>
+        <pre><span>laypage({
+    cont: document.getElementById('page2'), //容器。值支持id名、原生dom对象，jquery对象,
+    pages: 100, //总页数
+    skin: 'yahei', //加载内置皮肤，也可以直接赋值16进制颜色值，如:#c00
+    groups: 7 //连续显示分页数
+});</span></pre>
+
+        <h2 style="margin:10px 0;">开启跳页</h2>
+        <div id="page3" style="text-align:center;"></div>
+        <pre><span>laypage({
+    cont: $('#page3'), //容器。值支持id名、原生dom对象，jquery对象,
+    pages: 100, //总页数
+    skip: true, //是否开启跳页
+    skin: '#AF0000',
+    groups: 3 //连续显示分页数
+});</span></pre>
+
+        <h2 style="margin:10px 0;">自定义文本</h2>
+        <div id="page4" style="text-align:center;"></div>
+        <pre><span>laypage({
+    cont: 'page4', //容器。值支持id名、原生dom对象，jquery对象,
+    pages: 11, //总页数
+    skin: 'molv', //皮肤
+    first: '首页', //若不显示，设置false即可
+    last: '尾页', //若不显示，设置false即可
+    prev: '<', //若不显示，设置false即可
+    next: '>' //若不显示，设置false即可
+});</span></pre>
+
+        <h2 style="margin:10px 0;">隐藏首页和尾页</h2>
+        <div id="page5" style="text-align:center;"></div>
+        <pre><span>laypage({
+    cont: 'page5', //容器。值支持id名、原生dom对象，jquery对象,
+    pages: 11, //总页数
+    first: false,
+    last: false
+});</span></pre>
+
+        <h2 style="margin:10px 0;">开启hash</h2>
+        <div id="page6" style="text-align:center;"></div>
+        <div id="view6" style="padding-top:10px; text-align:center;"></div>
+        <pre><span>laypage({
+    cont: 'page6', //容器。值支持id名、原生dom对象，jquery对象,
+    pages: 68, //总页数
+    curr: location.hash.replace('#!fenye=', ''), //获取hash值为fenye的当前页
+    hash: 'fenye', //自定义hash值
+    jump: function(obj){
+        $('#view6').html('看看URL的变化。通过hash，你可以记录当前页。当前正处于第'+obj.curr+'页');
+    }
+});</span></pre>
+        
+        <h2 style="margin:10px 0;">只出现上一页/下一页</h2>
+        <div id="view7" style="padding-bottom:10px; text-align:center;"></div>
+        <div id="page7" style="text-align:center;"></div>
+        <pre><span>laypage({
+    cont: 'page7', //容器。值支持id名、原生dom对象，jquery对象,
+    pages: 11, //总页数
+    groups: 0,
+    first: false,
+    last: false,
+    jump: function(obj){
+        $('#view7').html('目前正在第'+ obj.curr +'页，一共有：'+ obj.pages +'页');
+    }
+});</span></pre>
+
+        <h2 style="margin:10px 0;">信息流</h2>
+        <div id="view8" style="padding-top:10px; text-align:center;"></div>
+        <div id="page8" class="demoflow" style="margin-bottom:10px; text-align:center;">加载更多</div>
+        
+        <pre><span>laypage({
+    cont: 'page8', //容器。值支持id名、原生dom对象，jquery对象,
+    pages: 7, //总页数
+    groups: 0, //连续分数数0
+    prev: false, //不显示上一页
+    next: '查看更多',
+    skin: 'flow', //设置信息流模式的样式
+    jump: function(obj){
+        if(obj.curr === 6){
+            this.next = '没有更多了';
+        }
+        $('#view8').append(appendimg(obj.curr));
+    }
+});</span></pre>
+
+        <div class="laylink">
+            <h3>Layui - on the way.</h3>
+            <a href="http://sentsin.com/jquery/layer" target="_blank">layer - 弹层组件</a>
+            <a href="http://sentsin.com/layui/laydate" target="_blank">laydate - 日期控件</a>
+            <a href="http://sentsin.com/layui/laytpl" target="_blank">laytpl - JavaScript模板引擎</a>
+            <a href="http://sentsin.com/layui/laypage" target="_blank">laypage - JavaScript分页组件</a>
+            <a href="http://sentsin.com/layui/layim" target="_blank">layim - webIM在线聊天</a>
+        </div>
+
+    </div>
+</div>
+
+<div class="box_index shadow xufooter" style="font-size:12px; width: 1000px; height:120px;">
+    <div class="bottomMsg">
+        <a href="http://sentsin.com" class="footer_logo" title="贤心博客"><img src="http://res.sentsin.com/images/xin.gif"  alt="贤心" /></a>
+        <ul class="footer_me">
+            <li><a href="http://sentsin.com">贤心</a> - 自由职业者。这不是一个人的博客。 | <a href="http://weibo.com/SentsinXu" target="_blank">微博</a>：<a href="http://weibo.com/SentsinXu" target="_blank">http://weibo.com/SentsinXu</a> | 交流：<a href="http://say.sentsin.com/home-45.html" target="_blank">前端开发论坛</a></li>
+            <li>
+                <a href="http://say.sentsin.com">Say前端技术论坛</a> 
+                <a href="http://sentsin.com/web/">前端开发</a> 
+                <a href="http://sentsin.com/mood/">轻微博</a>
+            </li>
+            <li>&nbsp;</li>
+            <li><a href="http://sentsin.com/web/197.html">广告合作</a> - 站长邮箱：xu@sentsin.com</li>
+            <li>2011-3011  sentsin.com <a href="javascript:;" onclick="paysentsin()">友情赞助</a></li>
+        </ul>
+    </div>
+</div>
+
+<a href="javascript:;" class="laygotop" id="laygotop"></a>
+<div style="height:50px;"></div>
+
+
+<!-- 无视下面所有的js，全是服务于demo -->
+<script src="http://res.xiami.net/pc/lay/lib.js"></script>
+<script src="http://res.sentsin.com/lay/lib/laycode/laycode.min.js"></script>
+<script src="demo.js"></script>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+var i = 0, len = $('.adsbygoogle').length;
+for(; i < len; i++){
+    (adsbygoogle = window.adsbygoogle || []).push({});
+}
+</script>
+<script src='http://w.cnzz.com/c.php?id=30060348'></script>
+
+</body>
+</html>
+
+
+
