@@ -4,6 +4,6 @@ layPage是一款多功能的js分页组件，即适用于异步分页，又可�
 
 [文档与演示](http://sentsin.com/layui/laypage/)   
 
-[官网]：http://sentsin.com/layui/laypage/(http://sentsin.com/layui/laypage/)   
+[官网]：http://sentsin.com/layui/laypage/
 
 
