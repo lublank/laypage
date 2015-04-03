@@ -1,0 +1,81 @@
+
+<!doctype html>
+<html>
+<head>
+<meta charset="gbk"/>
+<title>layPage demo</title>
+<meta name="keywords" content="分页插件,ajax分页,异步分页">
+<meta name="description" content="laypage是一款多功能的js分页组件，主要应用于前端页面Ajax普通分页以及信息流加载，并且可无缝迁移至Node.js平台。laypage不依赖于任何第三方库，直接拿来用即可，它的接口继承了layui系列组件的一贯简洁，极易上手。那么，从现在开始，将分页的任务交给laypage吧！">
+<link href="demo.css" type="text/css" rel="stylesheet">
+
+<script src="http://zz:100/res/lay/lib/laypage/laypage.js"></script>
+</head>
+<body>
+
+<ul id="biuuu_city_list">
+    <li>北京</li>
+    <li>上海</li>
+    <li>广州</li>
+    <li>杭州</li>
+    <li>长沙</li>
+    <li>合肥</li>
+    <li>宁夏</li>
+    <li>成都</li>
+    <li>西安</li>
+    <li>南昌</li>
+    <li>宁夏</li>
+    <li>成都</li>
+    <li>西安</li>
+    <li>南昌</li>
+    <li>宁夏</li>
+    <li>成都</li>
+    <li>西安</li>
+    <li>南昌</li>
+    <li>宁夏</li>
+    <li>成都</li>
+    <li>西安</li>
+    <li>南昌</li>
+</ul>
+<div id="biuuu_city"></div>
+
+<script src="http://res.xiami.net/pc/lay/lib.js"></script>
+
+<script>
+//拓展
+laypage.demo = function(options){
+    var view = $('#'+options.view), grunps = options.grunps;
+    var li = view.children('li'), len = li.length, data = [];
+    for(var i = 1; i <= li.length; i++){
+        var item = Math.ceil(i/grunps)-1;
+        typeof data[item] === 'undefined' ? 
+        data[item] = [li[i-1]] : 
+        data[item].push(li[i-1]);
+        item = null;
+    }
+    return laypage({
+        cont: options.cont,
+        pages: Math.ceil(len/grunps),
+        grunps: grunps,
+        jump: function(obj){
+            options.jump(data[obj.curr-1], view)
+        }
+    })
+};
+
+//调用
+laypage.demo({
+    view: 'biuuu_city_list',
+    cont: 'biuuu_city',
+    grunps: 7,
+    jump: function(html, view){
+        view.html(html);
+    }
+})
+</script>
+
+
+</body>
+</html>
+
+
+
