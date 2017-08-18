@@ -14,9 +14,9 @@ function laypage(options){
     var skin = 'laypagecss';
     laypage.dir = 'dir' in laypage ? laypage.dir : Page.getpath + '/skin/laypage.css';
     new Page(options);
-    if(laypage.dir && !doc[id](skin)){
-        Page.use(laypage.dir, skin);
-    }
+    //if(laypage.dir && !doc[id](skin)){
+    //    Page.use(laypage.dir, skin);
+    //}
 }
 
 laypage.v = '1.3';
